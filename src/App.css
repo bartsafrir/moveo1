@@ -36,3 +36,117 @@
     transform: rotate(360deg);
   }
 }
+
+.square {
+  width: auto;
+  height: 10em;
+  background-color: #e0e0e0;
+  border-radius: 0.5em;
+  cursor: pointer;
+  transition: all 0.1s ease-out;
+  vertical-align: middle !important;
+  padding: 1rem;
+}
+
+.square.active {
+  /*background-color: #198754;*/
+  color: white !important;
+}
+
+#box0 {
+  color: #455a64;
+}
+
+#box1 {
+  color: #1976d2;
+}
+
+#box2 {
+  color: #e64a19;
+}
+
+#box3 {
+  color: #c2185b;
+}
+
+#box4 {
+  color: #ffa000;
+}
+
+#box5 {
+  color: #388e3c;
+}
+
+#box6 {
+  color: #00796b;
+}
+
+#box7 {
+  color: #512da8;
+}
+
+#box8 {
+  color: #0288d1;
+}
+
+#box0.active {
+  background-color: #455a64 !important;
+}
+
+#box1.active {
+  background-color: #1976d2 !important;
+}
+
+#box2.active {
+  background-color: #e64a19 !important;
+}
+
+#box3.active {
+  background-color: #c2185b !important;
+}
+
+#box4.active {
+  background-color: #ffa000 !important;
+}
+
+#box5.active {
+  background-color: #388e3c !important;
+}
+
+#box6.active {
+  background-color: #00796b !important;
+}
+
+#box7.active {
+  background-color: #512da8 !important;
+}
+
+#box8.active {
+  background-color: #0288d1 !important;
+}
+
+.game-container {
+  max-width: 750px !important;
+  padding: 2.5em !important;
+}
+
+.rec-button {
+  width: 36px;
+  height: 36px;
+  background-color: #dc3545;
+  border-radius: 18px;
+  padding: 9px;
+}
+
+.rec-circle {
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 0.25em;
+  background-color: white;
+  transition: all 0.2s ease-out;
+  display: inline-block;
+}
+
+.rec-circle.active {
+  border-radius: 0 !important;
+}

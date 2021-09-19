@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Container, Row, Col, Button, Input } from "reactstrap";
+import React, { useState, useEffect, useRef, useReducer } from "react";
+import { Container, Row, Col, Button, Input, ButtonGroup } from "reactstrap";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
 
 import a1 from "../sounds/120_future_funk_beats_25.mp3";
@@ -14,12 +14,19 @@ import a9 from "../sounds/SilentStar_120_Em_OrganSynth.mp3";
 
 function Game() {
   // Rendering a square
-  const renderBox = (i) => {
-    return <Input type="checkbox" id={"box" + i} onClick={() => handleTick(i)} className="square" />;
+  const renderBox = (i, title = "") => {
+    //return <Input type="checkbox" id={"box" + i} onClick={() => handleTick(i)} className="square" />;
+    return (
+      <div id={"box" + i} onClick={() => handleTick(i)} className="square">
+        <b>{"" + title}</b>
+      </div>
+    );
   };
 
   // Handling a square tick
   const handleTick = (i) => {
+    var element = document.getElementById("box" + i);
+    element.classList.toggle("active");
     sounds.current[i].pause();
     sounds.current[i].currentTime = 0;
     const temp = matrix.current.slice();
@@ -30,10 +37,8 @@ function Game() {
   // Handling the on/off switch toggle
   const handleSwitch = (state) => {
     if (state) {
-      console.log(state);
       setBars(bars + 1);
     } else {
-      console.log(state);
       setBars(0);
     }
   };
@@ -53,11 +58,27 @@ function Game() {
   // Bars counter. 0 is music off.
   const [bars, setBars] = useState(0);
 
+  // Record will be pushed to this array
+  const recLog = useRef([]);
+
+  // Bars counter for record playback
+  const [recBars, setRecBars] = useState(0);
+
+  // Is recording
+  const isRec = useRef(false);
+
+  // Is there a recording playback available
+  const [playbackAvailable, setPlaybackAvailable] = useState(false);
+
   // Handling bar change (to next bar / off)
   useEffect(() => {
     let myTimeout;
     if (bars > 0) {
-      console.log(matrix.current);
+      console.log("isRec " + isRec.current);
+      if (isRec.current) {
+        recLog.current.push(matrix.current);
+        console.log(recLog.current);
+      }
       matrix.current.forEach((item, index) => {
         if (item) {
           console.log(index + " " + Date.now());
@@ -81,25 +102,73 @@ function Game() {
     }
   }, [bars]);
 
+  /*** RECORDING RELATED CODE ***/
+
+  // Handling record button press
+  const handleRec = () => {
+    if (!isRec.current) {
+      recLog.current = [];
+      setPlaybackAvailable(false);
+      document.getElementsByClassName("rec-label")[0].innerHTML = " stop";
+    }
+    isRec.current = !isRec.current;
+    document.getElementsByClassName("rec-circle")[0].classList.toggle("active");
+    if (!isRec.current) {
+      if (recLog.current.length > 0) setPlaybackAvailable(true);
+      document.getElementsByClassName("rec-label")[0].innerHTML = " record";
+    }
+  };
+
+  // Handling play record button press
+  const handlePlayRec = () => {
+    setBars(0);
+    if (recBars < 1) setRecBars(recBars + 1);
+    else setRecBars(0);
+  };
+
+  // Handling record playback bar change
+  useEffect(() => {
+    let myTimeout;
+    if (recBars > 0 && recBars <= recLog.current.length) {
+      recLog.current[recBars - 1].forEach((item, index) => {
+        if (item) {
+          sounds.current[index].pause();
+          sounds.current[index].currentTime = 0;
+          sounds.current[index].play();
+        }
+      });
+      myTimeout = setTimeout(() => {
+        setRecBars(recBars + 1);
+      }, 8000);
+      return () => {
+        clearTimeout(myTimeout);
+      };
+    } else {
+      clearTimeout(myTimeout);
+      setRecBars(0);
+      sounds.current.forEach((item, index) => {
+        sounds.current[index].pause();
+        sounds.current[index].currentTime = 0;
+      });
+    }
+  }, [recBars]);
+
   return (
-    <Container className="try">
-      <Row className="text-center">
-        <Col xs="4">{renderBox(0)}</Col>
-        <Col xs="4">{renderBox(1)}</Col>
-        <Col xs="4">{renderBox(2)}</Col>
-        <Col xs="4">{renderBox(3)}</Col>
-        <Col xs="4">{renderBox(4)}</Col>
-        <Col xs="4">{renderBox(5)}</Col>
-        <Col xs="4">{renderBox(6)}</Col>
-        <Col xs="4">{renderBox(7)}</Col>
-        <Col xs="4">{renderBox(8)}</Col>
+    <Container className="game-container">
+      <Row className="text-center gx-3 gy-3 pb-3">
+        <Col xs="4">{renderBox(0, "Future funk")}</Col>
+        <Col xs="4">{renderBox(1, "Stutter breakbeats")}</Col>
+        <Col xs="4">{renderBox(2, "Warwick bass")}</Col>
+        <Col xs="4">{renderBox(3, "Electric guitar")}</Col>
+        <Col xs="4">{renderBox(4, "Drums 1")}</Col>
+        <Col xs="4">{renderBox(5, "Tanggu")}</Col>
+        <Col xs="4">{renderBox(6, "Maze Politics")}</Col>
+        <Col xs="4">{renderBox(7, "Drums 2")}</Col>
+        <Col xs="4">{renderBox(8, "Organ Synth")}</Col>
       </Row>
 
-      <Row>
+      <Row className="text-center">
         <Col>
-          <Button color="primary" onClick={() => setBars(bars + 1)}>
-            Start
-          </Button>{" "}
           <BootstrapSwitchButton
             checked={bars !== 0}
             onstyle="success"
@@ -109,7 +178,23 @@ function Game() {
             }}
           />
         </Col>
-        <Col>{bars + "   " + matrix.current.join(",")}</Col>
+      </Row>
+      <Row>
+        <Col>
+          <ButtonGroup>
+            <Button color="danger" onClick={() => handleRec()}>
+              <div className="rec-circle align-middle">{""}</div>
+              <span className="rec-label">{" record"}</span>
+            </Button>
+            {playbackAvailable ? (
+              <Button color="dark" onClick={() => handlePlayRec()}>
+                {recBars > 0 ? "stop" : "play"}
+              </Button>
+            ) : (
+              ""
+            )}
+          </ButtonGroup>
+        </Col>
       </Row>
     </Container>
   );
