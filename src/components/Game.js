@@ -162,7 +162,7 @@ function Game() {
       </Row>
       <Row className="text-center gx-3 gy-3 pb-4">
         <Col xs="4">{renderBox(0, "Future funk")}</Col>
-        <Col xs="4">{renderBox(1, "Stutter breakbeats")}</Col>
+        <Col xs="4">{renderBox(1, "Stutter break")}</Col>
         <Col xs="4">{renderBox(2, "Warwick bass")}</Col>
         <Col xs="4">{renderBox(3, "Electric guitar")}</Col>
         <Col xs="4">{renderBox(4, "Drums 1")}</Col>
