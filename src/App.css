@@ -150,3 +150,13 @@
 .rec-circle.active {
   border-radius: 0 !important;
 }
+
+.credit {
+  font-size: 0.75em;
+  line-height: 38px;
+  vertical-align: middle;
+}
+
+h1 {
+  font-weight: bold !important;
+}

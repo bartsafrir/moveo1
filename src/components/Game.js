@@ -155,7 +155,12 @@ function Game() {
 
   return (
     <Container className="game-container">
-      <Row className="text-center gx-3 gy-3 pb-3">
+      <Row className="text-center pb-4">
+        <Col>
+          <h1>Loop Machine</h1>
+        </Col>
+      </Row>
+      <Row className="text-center gx-3 gy-3 pb-4">
         <Col xs="4">{renderBox(0, "Future funk")}</Col>
         <Col xs="4">{renderBox(1, "Stutter breakbeats")}</Col>
         <Col xs="4">{renderBox(2, "Warwick bass")}</Col>
@@ -167,20 +172,8 @@ function Game() {
         <Col xs="4">{renderBox(8, "Organ Synth")}</Col>
       </Row>
 
-      <Row className="text-center">
-        <Col>
-          <BootstrapSwitchButton
-            checked={bars !== 0}
-            onstyle="success"
-            offstyle="dark"
-            onChange={(checked) => {
-              handleSwitch(checked);
-            }}
-          />
-        </Col>
-      </Row>
       <Row>
-        <Col>
+        <Col xs="5">
           <ButtonGroup>
             <Button color="danger" onClick={() => handleRec()}>
               <div className="rec-circle align-middle">{""}</div>
@@ -194,6 +187,19 @@ function Game() {
               ""
             )}
           </ButtonGroup>
+        </Col>
+        <Col className="text-center" xs="2">
+          <BootstrapSwitchButton
+            checked={bars !== 0}
+            onstyle="success"
+            offstyle="dark"
+            onChange={(checked) => {
+              handleSwitch(checked);
+            }}
+          />
+        </Col>
+        <Col className="text-end text-secondary credit" xs="5">
+          &copy; 2021 Bar Tsafrir
         </Col>
       </Row>
     </Container>
