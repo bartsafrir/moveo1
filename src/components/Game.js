@@ -74,14 +74,11 @@ function Game() {
   useEffect(() => {
     let myTimeout;
     if (bars > 0) {
-      console.log("isRec " + isRec.current);
       if (isRec.current) {
         recLog.current.push(matrix.current);
-        console.log(recLog.current);
       }
       matrix.current.forEach((item, index) => {
         if (item) {
-          console.log(index + " " + Date.now());
           sounds.current[index].pause();
           sounds.current[index].currentTime = 0;
           sounds.current[index].play();
